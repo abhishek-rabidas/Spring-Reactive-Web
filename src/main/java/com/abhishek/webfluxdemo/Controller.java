@@ -1,12 +1,12 @@
 package com.abhishek.webfluxdemo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @RestController
 public class Controller {
@@ -24,9 +24,17 @@ public class Controller {
         return recordRepository.findAll();
     }
 
-    @GetMapping(value = "/getAll/stream", produces = "application/stream+json")
-    public Flux<?> getAllRecordsStream() {
-        return recordRepository.findAll();
+    @GetMapping(value = "/getAll/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @ResponseBody
+    public Flux<Record> getAllRecordsStream() {
+        return recordRepository.findAll().delayElements(Duration.ofMillis(100)).;
     }
+
+   /* var evtSource = new EventSource("http://localhost:8080/getAll/stream");
+   * evtSource.onmessage = function (event) {
+   *    console.log(JSON.parse(event.data).details)
+   * }
+   *
+   * */
 
 }
