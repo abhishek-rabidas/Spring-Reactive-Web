@@ -27,7 +27,7 @@ public class Controller {
     @GetMapping(value = "/getAll/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
     public Flux<Record> getAllRecordsStream() {
-        return recordRepository.findAll().delayElements(Duration.ofMillis(100)).;
+        return recordRepository.findAll().delayElements(Duration.ofMillis(100));
     }
 
    /* var evtSource = new EventSource("http://localhost:8080/getAll/stream");
